@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Prediction
+class Prediction extends DB
 {
 	
 	public function  getHomeTeamScore()

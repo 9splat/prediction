@@ -2,11 +2,25 @@
 
 namespace App;
 
-class User {
+class User extends DB{
 
+	public $id;
 	public $firstName;
 	public $lastName;
 	public $email;
+	public $username;
+	public $password;
+	public $table = 'users';
+
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
+
+	public function getId()
+	{
+		return $this->id;
+	}
 
 	public function setFirstName($firstName)
 	{
@@ -38,6 +52,26 @@ class User {
 		return $this->email;
 	}
 
+	public function setUsername($username)
+	{
+		$this->username = $username;
+	}	
+
+	public function getUsername()
+	{
+		return $this->username;
+	}
+
+	public function setPassword($password)
+	{
+		$this->password = $password;
+	}	
+
+	public function getPassword()
+	{
+		return $this->password;
+	}
+
 	public function isValid()
 	{
 		if(empty($this->firstName)) {
@@ -53,10 +87,25 @@ class User {
 
 	public function register()
 	{
+		$query = "insert into users(first_name, last_name, email, username, password ) values('". $this->firstName ."', '". $this->lastName."', '". $this->email."','".$this->username."','".$this->password."')";	
+		
+		return $this->query($query);
+	}
 
-		$query = "insert into users(first_name, last_name, email ) values('". $this->firstName ."', '". $this->lastName."', '". $this->email."')";	
-		$connection = mysqli_connect('localhost', 'root','', 'worldcup');
-		mysqli_query($connection, $query);
+	public function getAll()
+	{
+		$result = parent::getAll();
+		$users = [];
+		while( $row = mysqli_fetch_assoc($result)){
+
+			$thisUser = new User();
+			$thisUser->setId($row['id']);
+			$thisUser->setFirstName($row['first_name']);
+			$thisUser->setLastName($row['last_name']);
+			$users[] = $thisUser;
+		}
+
+		return $users;
 	}
 
 }
